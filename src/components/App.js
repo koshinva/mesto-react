@@ -1,3 +1,4 @@
+import React from 'react';
 import Header from './Header.js';
 import Main from './Main.js';
 import Footer from './Footer.js';
@@ -5,18 +6,37 @@ import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from './ImagePopup.js';
 
 function App() {
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState();
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState();
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState();
+
+  const handleEditAvatarClick = () => {
+    setIsEditAvatarPopupOpen(true);
+  };
+  const handleEditProfileClick = () => {
+    setIsEditProfilePopupOpen(true);
+  };
+  const handleAddPlaceClick = () => {
+    setIsAddPlacePopupOpen(true);
+  };
+
   return (
     <div className="page">
       <div className="container">
         <Header />
-        <Main />
+        <Main
+          onEditProfile={handleEditProfileClick}
+          onAddPlace={handleAddPlaceClick}
+          onEditAvatar={handleEditAvatarClick}
+        />
         <Footer />
       </div>
-      <PopupWithForm
+      <PopupWithForm  
         name="profile"
         title="Редактировать профиль"
         labelButtonSubmit="Сохранить"
         ariaLabelText="Закрыть окно редактирования профиля"
+        isOpen={isEditProfilePopupOpen}
       >
         <input
           className="popup__input popup__input_value_name"
@@ -46,6 +66,7 @@ function App() {
         title="Новое место"
         labelButtonSubmit="Создать"
         ariaLabelText="Закрыть окно добавления нового места"
+        isOpen={isAddPlacePopupOpen}
       >
         <input
           className="popup__input popup__input_value_title"
@@ -81,6 +102,7 @@ function App() {
         title="Обновить аватар"
         labelButtonSubmit="Да"
         ariaLabelText="Закрыть окно изменения аватара профиля"
+        isOpen={isEditAvatarPopupOpen}
       >
         <input
           className="popup__input popup__input_value_link-avatar"
@@ -93,7 +115,7 @@ function App() {
         <span className="popup__input-error input-avatar-error"></span>
       </PopupWithForm>
       <ImagePopup />
-      <template id="place-template">
+      {/* <template id="place-template">
         <div className="place__element">
           <img className="place__image" src="#" alt="" />
           <div className="place__description">
@@ -113,7 +135,7 @@ function App() {
             aria-label="Удалить карточку"
           ></button>
         </div>
-      </template>
+      </template> */}
     </div>
   );
 }

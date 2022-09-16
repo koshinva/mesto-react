@@ -1,20 +1,11 @@
-function Main() {
-  function handleEditAvatarClick() {
-    document.querySelector('.popup_type_change-avatar').classList.add('popup_opened');
-  }
-  function handleEditProfileClick() {
-    document.querySelector('.popup_type_profile').classList.add('popup_opened');
-  }
-  function handleAddPlaceClick() {
-    document.querySelector('.popup_type_place').classList.add('popup_opened');
-  }
+function Main(props) {
   return (
     <main className="main">
       <section className="profile">
         <button
           className="profile__button-change-avatar"
           type="button"
-          onClick={handleEditAvatarClick}
+          onClick={props.onEditAvatar}
           aria-label="Открыть окно изменения аватара профиля"
         >
           <img className="profile__avatar" src="#" alt="аватар профиля" />
@@ -24,7 +15,7 @@ function Main() {
           <button
             className="profile__button-edit"
             type="button"
-            onClick={handleEditProfileClick}
+            onClick={props.onEditProfile}
             aria-label="Открыть окно редактирования профиля"
           ></button>
           <p className="profile__profession"></p>
@@ -32,7 +23,7 @@ function Main() {
         <button
           className="profile__button-add"
           type="button"
-          onClick={handleAddPlaceClick}
+          onClick={props.onAddPlace}
           aria-label="Открыть окно добавления карточки"
         ></button>
       </section>
