@@ -10,6 +10,7 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState();
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState();
 
+
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
   };
@@ -19,6 +20,11 @@ function App() {
   const handleAddPlaceClick = () => {
     setIsAddPlacePopupOpen(true);
   };
+  const closeAllPopups = () => {
+    setIsEditAvatarPopupOpen(false);
+    setIsEditProfilePopupOpen(false);
+    setIsAddPlacePopupOpen(false);
+  }
 
   return (
     <div className="page">
@@ -37,6 +43,7 @@ function App() {
         labelButtonSubmit="Сохранить"
         ariaLabelText="Закрыть окно редактирования профиля"
         isOpen={isEditProfilePopupOpen}
+        onClose={closeAllPopups}
       >
         <input
           className="popup__input popup__input_value_name"
@@ -67,6 +74,7 @@ function App() {
         labelButtonSubmit="Создать"
         ariaLabelText="Закрыть окно добавления нового места"
         isOpen={isAddPlacePopupOpen}
+        onClose={closeAllPopups}
       >
         <input
           className="popup__input popup__input_value_title"
@@ -103,6 +111,7 @@ function App() {
         labelButtonSubmit="Да"
         ariaLabelText="Закрыть окно изменения аватара профиля"
         isOpen={isEditAvatarPopupOpen}
+        onClose={closeAllPopups}
       >
         <input
           className="popup__input popup__input_value_link-avatar"
