@@ -9,6 +9,7 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState();
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState();
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState();
+  const [selectedCard, setSelectedCard] = React.useState({});
 
 
   const handleEditAvatarClick = () => {
@@ -20,10 +21,14 @@ function App() {
   const handleAddPlaceClick = () => {
     setIsAddPlacePopupOpen(true);
   };
+  const handleCardClick = (card) => {
+    setSelectedCard(card);
+  }
   const closeAllPopups = () => {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
+    setSelectedCard({});
   }
 
   return (
@@ -34,6 +39,7 @@ function App() {
           onEditProfile={handleEditProfileClick}
           onAddPlace={handleAddPlaceClick}
           onEditAvatar={handleEditAvatarClick}
+          onCardClick={handleCardClick}
         />
         <Footer />
       </div>
@@ -123,7 +129,7 @@ function App() {
         />
         <span className="popup__input-error input-avatar-error"></span>
       </PopupWithForm>
-      <ImagePopup />
+      <ImagePopup card={selectedCard} onClose={closeAllPopups}/>
       {/* <template id="place-template">
         <div className="place__element">
           <img className="place__image" src="#" alt="" />
