@@ -6,9 +6,9 @@ import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from './ImagePopup.js';
 
 function App() {
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState();
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState();
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState();
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
 
 
@@ -57,6 +57,7 @@ function App() {
           type="text"
           name="name"
           autoComplete="off"
+          placeholder="Имя пользователя"
           required
           minLength="2"
           maxLength="40"
@@ -68,6 +69,7 @@ function App() {
           type="text"
           name="profession"
           autoComplete="off"
+          placeholder="Информация о пользователе"
           required
           minLength="2"
           maxLength="200"
@@ -130,27 +132,6 @@ function App() {
         <span className="popup__input-error input-avatar-error"></span>
       </PopupWithForm>
       <ImagePopup card={selectedCard} onClose={closeAllPopups}/>
-      {/* <template id="place-template">
-        <div className="place__element">
-          <img className="place__image" src="#" alt="" />
-          <div className="place__description">
-            <h2 className="place__name-city"></h2>
-            <div className="place__score">
-              <button
-                className="place__like"
-                type="button"
-                aria-label="Поставить или убрать лайк"
-              ></button>
-              <span className="place__count-like"></span>
-            </div>
-          </div>
-          <button
-            className="place__button-remove"
-            type="button"
-            aria-label="Удалить карточку"
-          ></button>
-        </div>
-      </template> */}
     </div>
   );
 }
