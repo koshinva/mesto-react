@@ -7,6 +7,7 @@ import ImagePopup from './ImagePopup.js';
 import api from '../utils/Api';
 import { CurrentUserContext } from '../context/CurrentUserContext.js';
 import EditProfilePopup from './EditProfilePopup.js';
+import EditAvatarPopup from './EditAvatarPopup.js';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -47,6 +48,14 @@ function App() {
       })
       .then(() => closeAllPopups());
   };
+  const handleUpdateAvatar = ({ avatar }) => {
+    api
+      .apdateAvatar(avatar)
+      .then((dataUser) => {
+        setCurrentUser(dataUser);
+      })
+      .then(() => closeAllPopups());
+  };
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -64,6 +73,11 @@ function App() {
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateUser}
+        />
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closeAllPopups}
+          onUpdateAvatar={handleUpdateAvatar}
         />
         <PopupWithForm
           name="place"
@@ -102,24 +116,6 @@ function App() {
           labelButtonSubmit="Сохранить"
           ariaLabelText="Закрыть окно подтверждения удаления карточки"
         ></PopupWithForm>
-        <PopupWithForm
-          name="change-avatar"
-          title="Обновить аватар"
-          labelButtonSubmit="Да"
-          ariaLabelText="Закрыть окно изменения аватара профиля"
-          isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopups}
-        >
-          <input
-            className="popup__input popup__input_value_link-avatar"
-            id="input-avatar"
-            type="url"
-            name="avatar"
-            autoComplete="off"
-            required
-          />
-          <span className="popup__input-error input-avatar-error"></span>
-        </PopupWithForm>
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
       </div>
     </CurrentUserContext.Provider>
