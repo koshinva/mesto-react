@@ -7,9 +7,11 @@ function Card({ card, ...props }) {
   const cardDeleteButtonClassName = `place__button-remove ${
     isOwn && 'place__button-remove_visible'
   }`;
-  const isLiked = card.likes.some((userLiked) => userLiked._id === currentUser._id);
+  const isLiked = card.likes.some(userLiked => userLiked._id === currentUser._id);
   const cardLikeButtonClassName = `place__like ${isLiked && 'place__like_active'}`
-
+  const handleLikeClick = () => {
+    props.onCardLike(card);
+  }
   return (
     <div className="place__element">
       <img
@@ -25,6 +27,7 @@ function Card({ card, ...props }) {
             className={cardLikeButtonClassName}
             type="button"
             aria-label="Поставить или убрать лайк"
+            onClick={handleLikeClick}
           ></button>
           <span className="place__count-like">{card.likes.length}</span>
         </div>

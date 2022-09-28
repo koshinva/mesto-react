@@ -61,22 +61,22 @@ class Api {
     });
   };
 
-  likeCard = (id) => {
-    return fetch(`${this._baseUrl}/cards/${id}/likes`, {
-      method: 'PUT',
-      headers: this._headers,
-    }).then((res) => {
-      return this._checkResponse(res);
-    });
-  };
-
-  disLikeCard = (id) => {
-    return fetch(`${this._baseUrl}/cards/${id}/likes`, {
-      method: 'DELETE',
-      headers: this._headers,
-    }).then((res) => {
-      return this._checkResponse(res);
-    });
+  likeCard = (id, statusLike) => {
+    if (statusLike) {
+      return fetch(`${this._baseUrl}/cards/${id}/likes`, {
+        method: 'PUT',
+        headers: this._headers,
+      }).then((res) => {
+        return this._checkResponse(res);
+      });
+    } else {
+      return fetch(`${this._baseUrl}/cards/${id}/likes`, {
+        method: 'DELETE',
+        headers: this._headers,
+      }).then((res) => {
+        return this._checkResponse(res);
+      });
+    }
   };
 
   apdateAvatar = (urlAvatar) => {

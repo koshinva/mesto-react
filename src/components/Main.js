@@ -13,6 +13,12 @@ function Main(props) {
     });
   }, []);
 
+  const handleCardClick = card => {
+    const isLiked = card.likes.some(userLiked => userLiked._id === currentUser._id);
+    api.likeCard(card._id, !isLiked).then((newCard) => {
+      setCards((state) => state.map((c) => c._id === card._id ? newCard : c))
+    })
+  }
   return (
     <main className="main">
       <section className="profile">
@@ -47,7 +53,7 @@ function Main(props) {
       </section>
       <section className="place">
         {cards.map((card) => (
-          <Card key={card._id} card={card} onCardClick={props.onCardClick} />
+          <Card key={card._id} card={card} onCardClick={props.onCardClick} onCardLike={handleCardClick} />
         ))}
       </section>
     </main>
