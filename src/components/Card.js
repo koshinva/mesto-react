@@ -12,6 +12,9 @@ function Card({ card, ...props }) {
   const handleLikeClick = () => {
     props.onCardLike(card);
   }
+  const handleDeleteClick = () => {
+    props.onCardDelete(card);
+  }
   return (
     <div className="place__element">
       <img
@@ -36,6 +39,7 @@ function Card({ card, ...props }) {
         className={cardDeleteButtonClassName}
         type="button"
         aria-label="Удалить карточку"
+        onClick={handleDeleteClick}
       ></button>
     </div>
   );
