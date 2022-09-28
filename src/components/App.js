@@ -6,6 +6,7 @@ import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from './ImagePopup.js';
 import api from '../utils/Api';
 import { CurrentUserContext } from '../context/CurrentUserContext.js';
+import EditProfilePopup from './EditProfilePopup.js';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -38,7 +39,14 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setSelectedCard({});
   };
-
+  const handleUpdateUser = ({ name, about }) => {
+    api
+      .editProfile(name, about)
+      .then((dataUser) => {
+        setCurrentUser(dataUser);
+      })
+      .then(() => closeAllPopups());
+  };
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -52,39 +60,11 @@ function App() {
           />
           <Footer />
         </div>
-        <PopupWithForm
-          name="profile"
-          title="Редактировать профиль"
-          labelButtonSubmit="Сохранить"
-          ariaLabelText="Закрыть окно редактирования профиля"
+        <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
-        >
-          <input
-            className="popup__input popup__input_value_name"
-            id="input-name"
-            type="text"
-            name="name"
-            autoComplete="off"
-            placeholder="Имя пользователя"
-            required
-            minLength="2"
-            maxLength="40"
-          />
-          <span className="popup__input-error input-name-error"></span>
-          <input
-            className="popup__input popup__input_value_profession"
-            id="input-profession"
-            type="text"
-            name="profession"
-            autoComplete="off"
-            placeholder="Информация о пользователе"
-            required
-            minLength="2"
-            maxLength="200"
-          />
-          <span className="popup__input-error input-profession-error"></span>
-        </PopupWithForm>
+          onUpdateUser={handleUpdateUser}
+        />
         <PopupWithForm
           name="place"
           title="Новое место"

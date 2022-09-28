@@ -1,6 +1,10 @@
 function PopupWithForm(props) {
   return (
-    <div className={`popup popup_type_${props.name} ${props.isOpen && 'popup_opened'}`}>
+    <div
+      className={`popup popup_type_${props.name} ${
+        props.isOpen && 'popup_opened'
+      }`}
+    >
       <div className={`popup__body popup__body_location_${props.name}`}>
         <h2 className={`popup__title popup__title_location_${props.name}`}>
           {props.title}
@@ -9,6 +13,7 @@ function PopupWithForm(props) {
           className={`popup__form popup__form_location_${props.name}`}
           name={`popup__form_location_${props.name}`}
           noValidate
+          onSubmit={props.onSubmit}
         >
           {props.children}
           <button className="popup__button" type="submit">
