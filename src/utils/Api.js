@@ -61,7 +61,7 @@ class Api {
     });
   };
 
-  likeCard = (id, statusLike) => {
+  changeLikeCard = (id, statusLike) => {
     if (statusLike) {
       return fetch(`${this._baseUrl}/cards/${id}/likes`, {
         method: 'PUT',
