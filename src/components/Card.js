@@ -1,25 +1,36 @@
-function Card(props) {
+import { useContext } from 'react';
+import { CurrentUserContext } from '../context/CurrentUserContext';
+
+function Card({ card, ...props }) {
+  const currentUser = useContext(CurrentUserContext);
+  const isOwn = currentUser._id === card.owner._id;
+  const cardDeleteButtonClassName = `place__button-remove ${
+    isOwn && 'place__button-remove_visible'
+  }`;
+  const isLiked = card.likes.some((userLiked) => userLiked._id === currentUser._id);
+  const cardLikeButtonClassName = `place__like ${isLiked && 'place__like_active'}`
+
   return (
     <div className="place__element">
       <img
         className="place__image"
-        src={props.card.link}
-        alt={props.card.name}
-        onClick={() => props.onCardClick(props.card)}
+        src={card.link}
+        alt={card.name}
+        onClick={() => props.onCardClick(card)}
       />
       <div className="place__description">
-        <h2 className="place__name-city">{props.card.name}</h2>
+        <h2 className="place__name-city">{card.name}</h2>
         <div className="place__score">
           <button
-            className="place__like"
+            className={cardLikeButtonClassName}
             type="button"
             aria-label="Поставить или убрать лайк"
           ></button>
-          <span className="place__count-like">{props.card.likes.length}</span>
+          <span className="place__count-like">{card.likes.length}</span>
         </div>
       </div>
       <button
-        className="place__button-remove"
+        className={cardDeleteButtonClassName}
         type="button"
         aria-label="Удалить карточку"
       ></button>
