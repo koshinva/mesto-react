@@ -10,15 +10,19 @@ import EditProfilePopup from './EditProfilePopup.js';
 import EditAvatarPopup from './EditAvatarPopup.js';
 import AddPlacePopup from './AddPlacePopup.js';
 import { CurrentIsLoading } from '../context/CurrentIsLoading.js';
+import ConfirmCardRemovePopup from './ConfirmCardRemovePopup.js';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isConfirmCardRemovePopupOpen, setIsConfirmCardRemovePopupOpen] =
+    useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [cardOnDelete, setCardOnDelete] = useState({});
 
   useEffect(() => {
     api.getCardInfo().then((dataCardInfo) => {
@@ -40,10 +44,9 @@ function App() {
       setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
     });
   };
-  const handleCardDelete = (card) => {
-    api.deleteCard(card._id).then(() => {
-      setCards((state) => state.filter((c) => c._id !== card._id));
-    });
+  const handleConfirmDeleteClick = (card) => {
+    setIsConfirmCardRemovePopupOpen(true);
+    setCardOnDelete(card);
   };
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
@@ -61,7 +64,9 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
+    setIsConfirmCardRemovePopupOpen(false);
     setSelectedCard({});
+    setCardOnDelete({});
   };
   const useFetching = (callback) => {
     return (...args) => {
@@ -91,18 +96,20 @@ function App() {
       setCards([newCard, ...cards]);
     });
   });
+  const handleCardDelete = useFetching(() => {
+    return api.deleteCard(cardOnDelete._id).then(() => {
+      setCards((state) => state.filter((c) => c._id !== cardOnDelete._id));
+    });
+  });
   const closePopupEsc = (e) => {
     if (e.key === 'Escape') {
       closeAllPopups();
     }
-  }
-  const closePopupOverlay = () => {
-    closeAllPopups();
-  }
+  };
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <CurrentIsLoading.Provider value={isLoading}>
-        <div className="page" tabIndex='0' onKeyDown={closePopupEsc}>
+        <div className="page" tabIndex="0" onKeyDown={closePopupEsc}>
           <div className="container">
             <Header />
             <Main
@@ -111,7 +118,7 @@ function App() {
               onEditAvatar={handleEditAvatarClick}
               onCardClick={handleCardClick}
               onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}
+              onCardDelete={handleConfirmDeleteClick}
               cards={cards}
             />
             <Footer />
@@ -131,12 +138,11 @@ function App() {
             onClose={closeAllPopups}
             onAddPlace={handleAddPlaceSubmit}
           />
-          <PopupWithForm
-            name="delete-card"
-            title="Вы уверены?"
-            labelButtonSubmit="Сохранить"
-            ariaLabelText="Закрыть окно подтверждения удаления карточки"
-          ></PopupWithForm>
+          <ConfirmCardRemovePopup
+            isOpen={isConfirmCardRemovePopupOpen}
+            onClose={closeAllPopups}
+            onDelete={handleCardDelete}
+          />
           <ImagePopup card={selectedCard} onClose={closeAllPopups} />
         </div>
       </CurrentIsLoading.Provider>

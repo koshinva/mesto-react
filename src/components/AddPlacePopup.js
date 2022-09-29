@@ -10,14 +10,21 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
   const handleChangeLink = (e) => {
     setLink(e.target.value);
   };
+  const resetInputs = () => {
+    setTitle('');
+    setLink('');
+  }
+  const handleClose = () => {
+    onClose();
+    resetInputs();
+  }
   const handleSubmit = (e) => {
     e.preventDefault();
     onAddPlace({
       name: title,
       link,
     });
-    setTitle('');
-    setLink('');
+    resetInputs();
   };
   return (
     <PopupWithForm
@@ -26,7 +33,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       labelButtonSubmit="Создать"
       ariaLabelText="Закрыть окно добавления нового места"
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       onSubmit={handleSubmit}
     >
       <input
