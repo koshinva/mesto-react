@@ -1,11 +1,19 @@
+import { useContext } from 'react';
+import { CurrentIsLoading } from '../context/CurrentIsLoading';
+
 function PopupWithForm(props) {
+  const isLoading = useContext(CurrentIsLoading);
   return (
     <div
       className={`popup popup_type_${props.name} ${
         props.isOpen && 'popup_opened'
       }`}
+      onClick={props.onClose}
     >
-      <div className={`popup__body popup__body_location_${props.name}`}>
+      <div
+        className={`popup__body popup__body_location_${props.name}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         <h2 className={`popup__title popup__title_location_${props.name}`}>
           {props.title}
         </h2>
@@ -17,7 +25,7 @@ function PopupWithForm(props) {
         >
           {props.children}
           <button className="popup__button" type="submit">
-            {props.labelButtonSubmit}
+            {isLoading ? 'Сохранение...' : `${props.labelButtonSubmit}`}
           </button>
         </form>
         <button

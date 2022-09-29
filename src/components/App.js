@@ -9,6 +9,7 @@ import { CurrentUserContext } from '../context/CurrentUserContext.js';
 import EditProfilePopup from './EditProfilePopup.js';
 import EditAvatarPopup from './EditAvatarPopup.js';
 import AddPlacePopup from './AddPlacePopup.js';
+import { CurrentIsLoading } from '../context/CurrentIsLoading.js';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -17,6 +18,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   useEffect(() => {
     api.getCardInfo().then((dataCardInfo) => {
@@ -61,67 +63,83 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setSelectedCard({});
   };
-  const handleUpdateUser = ({ name, about }) => {
-    api
-      .editProfile(name, about)
-      .then((dataUser) => {
-        setCurrentUser(dataUser);
-      })
-      .then(() => closeAllPopups());
+  const useFetching = (callback) => {
+    return (...args) => {
+      setIsLoading(true);
+      callback(...args)
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          closeAllPopups();
+          setIsLoading(false);
+        });
+    };
   };
-  const handleUpdateAvatar = ({ avatar }) => {
-    api
-      .apdateAvatar(avatar)
-      .then((dataUser) => {
-        setCurrentUser(dataUser);
-      })
-      .then(() => closeAllPopups());
-  };
-  const handleAddPlaceSubmit = ({ name, link }) => {
-    api.addNewCard(name, link).then((newCard) => {
-      setCards([newCard, ...cards])
-    })
-    .then(() => closeAllPopups());
-  };
+  const handleUpdateUser = useFetching(({ name, about }) => {
+    return api.editProfile(name, about).then((dataUser) => {
+      setCurrentUser(dataUser);
+    });
+  });
+  const handleUpdateAvatar = useFetching(({ avatar }) => {
+    return api.apdateAvatar(avatar).then((dataUser) => {
+      setCurrentUser(dataUser);
+    });
+  });
+  const handleAddPlaceSubmit = useFetching(({ name, link }) => {
+    return api.addNewCard(name, link).then((newCard) => {
+      setCards([newCard, ...cards]);
+    });
+  });
+  const closePopupEsc = (e) => {
+    if (e.key === 'Escape') {
+      closeAllPopups();
+    }
+  }
+  const closePopupOverlay = () => {
+    closeAllPopups();
+  }
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <div className="page">
-        <div className="container">
-          <Header />
-          <Main
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onEditAvatar={handleEditAvatarClick}
-            onCardClick={handleCardClick}
-            onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
-            cards={cards}
+      <CurrentIsLoading.Provider value={isLoading}>
+        <div className="page" tabIndex='0' onKeyDown={closePopupEsc}>
+          <div className="container">
+            <Header />
+            <Main
+              onEditProfile={handleEditProfileClick}
+              onAddPlace={handleAddPlaceClick}
+              onEditAvatar={handleEditAvatarClick}
+              onCardClick={handleCardClick}
+              onCardLike={handleCardLike}
+              onCardDelete={handleCardDelete}
+              cards={cards}
+            />
+            <Footer />
+          </div>
+          <EditProfilePopup
+            isOpen={isEditProfilePopupOpen}
+            onClose={closeAllPopups}
+            onUpdateUser={handleUpdateUser}
           />
-          <Footer />
+          <EditAvatarPopup
+            isOpen={isEditAvatarPopupOpen}
+            onClose={closeAllPopups}
+            onUpdateAvatar={handleUpdateAvatar}
+          />
+          <AddPlacePopup
+            isOpen={isAddPlacePopupOpen}
+            onClose={closeAllPopups}
+            onAddPlace={handleAddPlaceSubmit}
+          />
+          <PopupWithForm
+            name="delete-card"
+            title="Вы уверены?"
+            labelButtonSubmit="Сохранить"
+            ariaLabelText="Закрыть окно подтверждения удаления карточки"
+          ></PopupWithForm>
+          <ImagePopup card={selectedCard} onClose={closeAllPopups} />
         </div>
-        <EditProfilePopup
-          isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopups}
-          onUpdateUser={handleUpdateUser}
-        />
-        <EditAvatarPopup
-          isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopups}
-          onUpdateAvatar={handleUpdateAvatar}
-        />
-        <AddPlacePopup
-          isOpen={isAddPlacePopupOpen}
-          onClose={closeAllPopups}
-          onAddPlace={handleAddPlaceSubmit}
-        />
-        <PopupWithForm
-          name="delete-card"
-          title="Вы уверены?"
-          labelButtonSubmit="Сохранить"
-          ariaLabelText="Закрыть окно подтверждения удаления карточки"
-        ></PopupWithForm>
-        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-      </div>
+      </CurrentIsLoading.Provider>
     </CurrentUserContext.Provider>
   );
 }
