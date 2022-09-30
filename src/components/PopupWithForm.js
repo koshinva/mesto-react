@@ -3,12 +3,16 @@ import { CurrentIsLoading } from '../context/CurrentIsLoading';
 
 function PopupWithForm(props) {
   const isLoading = useContext(CurrentIsLoading);
+  // const handleClose = () => {
+  //   props.onClose();
+  //   props.resetFormOnClose();
+  // } 
   return (
     <div
       className={`popup popup_type_${props.name} ${
         props.isOpen && 'popup_opened'
       }`}
-      onClick={props.onClose}
+      onClick={props.handleClose}
     >
       <div
         className={`popup__body popup__body_location_${props.name}`}
@@ -24,7 +28,13 @@ function PopupWithForm(props) {
           onSubmit={props.onSubmit}
         >
           {props.children}
-          <button className="popup__button" type="submit">
+          <button
+            className={`popup__button ${
+              !props.isValid && 'popup__button_inactive'
+            }`}
+            type="submit"
+            disabled={!props.isValid ? true : false}
+          >
             {isLoading ? 'Сохранение...' : `${props.labelButtonSubmit}`}
           </button>
         </form>
@@ -32,7 +42,7 @@ function PopupWithForm(props) {
           className="popup__close-icon"
           type="button"
           aria-label={props.ariaLabelText}
-          onClick={props.onClose}
+          onClick={props.handleClose}
         ></button>
       </div>
     </div>

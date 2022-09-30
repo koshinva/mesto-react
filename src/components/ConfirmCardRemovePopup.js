@@ -6,6 +6,9 @@ function ConfirmCardRemovePopup({ isOpen, onClose, onDelete }) {
     e.preventDefault();
     onDelete();
   }
+  const handleClose = () => {
+    onClose();
+  } 
   return (
     <PopupWithForm
       name="delete-card"
@@ -13,8 +16,9 @@ function ConfirmCardRemovePopup({ isOpen, onClose, onDelete }) {
       labelButtonSubmit="Да"
       ariaLabelText="Закрыть окно подтверждения удаления карточки"
       isOpen={isOpen}
-      onClose={onClose}
       onSubmit={handleDeleteCard}
+      isValid={true}
+      handleClose={handleClose}
     ></PopupWithForm>
   );
 }

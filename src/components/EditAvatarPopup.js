@@ -1,15 +1,30 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { useFormWithValidation } from '../utils/formValidator';
 import PopupWithForm from './PopupWithForm';
 
 function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
   const avatar = useRef();
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onUpdateAvatar({
-      avatar: avatar.current.value,
-    });
+  const {
+    values,
+    errors,
+    isValid,
+    handleChange,
+    resetForm,
+  } = useFormWithValidation();
+  const resetFormOnClose = () => {
+    resetForm()
     avatar.current.value = '';
   };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onUpdateAvatar(values);
+    resetFormOnClose();
+  };
+  const handleClose = () => {
+    onClose();
+    resetFormOnClose();
+  } 
+  const isAvatarError = 'avatar' in errors && errors.avatar.length > 0;
   return (
     <PopupWithForm
       name="change-avatar"
@@ -17,19 +32,27 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
       labelButtonSubmit="Да"
       ariaLabelText="Закрыть окно изменения аватара профиля"
       isOpen={isOpen}
-      onClose={onClose}
       onSubmit={handleSubmit}
+      isValid={isValid}
+      handleClose={handleClose}
     >
       <input
-        className="popup__input popup__input_value_link-avatar"
+        className={`popup__input ${isAvatarError && 'popup__input_type_error'}`}
         id="input-avatar"
         type="url"
         name="avatar"
         autoComplete="off"
         required
         ref={avatar}
+        onChange={handleChange}
       />
-      <span className="popup__input-error input-avatar-error"></span>
+      <span
+        className={`popup__input-error ${
+          isAvatarError && 'popup__input-error_active'
+        }`}
+      >
+        {isAvatarError && errors.avatar}
+      </span>
     </PopupWithForm>
   );
 }

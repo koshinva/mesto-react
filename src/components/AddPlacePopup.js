@@ -1,31 +1,30 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useFormWithValidation } from '../utils/formValidator';
 import PopupWithForm from './PopupWithForm';
 
 function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
-  const [title, setTitle] = useState('');
-  const [link, setLink] = useState('');
-  const handleChangeTitle = (e) => {
-    setTitle(e.target.value);
+  const {
+    values,
+    handleChange,
+    errors,
+    isValid,
+    resetForm,
+  } = useFormWithValidation();
+
+  const resetFormOnClose = () => {
+    resetForm({ ...values, name: '', link: '' });
   };
-  const handleChangeLink = (e) => {
-    setLink(e.target.value);
-  };
-  const resetInputs = () => {
-    setTitle('');
-    setLink('');
-  }
-  const handleClose = () => {
-    onClose();
-    resetInputs();
-  }
   const handleSubmit = (e) => {
     e.preventDefault();
-    onAddPlace({
-      name: title,
-      link,
-    });
-    resetInputs();
+    onAddPlace(values);
+    resetFormOnClose();
   };
+  const handleClose = () => {
+    onClose();
+    resetFormOnClose();
+  } 
+  const isNameError = 'name' in errors && errors.name.length > 0;
+  const isLinkError = 'link' in errors && errors.link.length > 0;
   return (
     <PopupWithForm
       name="place"
@@ -33,35 +32,46 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       labelButtonSubmit="Создать"
       ariaLabelText="Закрыть окно добавления нового места"
       isOpen={isOpen}
-      onClose={handleClose}
       onSubmit={handleSubmit}
+      isValid={isValid}
+      handleClose={handleClose}
     >
       <input
-        className="popup__input popup__input_value_title"
-        id="input-title"
+        className={`popup__input ${isNameError && 'popup__input_type_error'}`}
         type="text"
-        name="title"
+        name="name"
         autoComplete="off"
         placeholder="Название"
         required
         minLength="2"
         maxLength="30"
-        value={title}
-        onChange={handleChangeTitle}
+        value={values.name}
+        onChange={handleChange}
       />
-      <span className="popup__input-error input-title-error"></span>
+      <span
+        className={`popup__input-error ${
+          isNameError && 'popup__input-error_active'
+        }`}
+      >
+        {isNameError && errors.name}
+      </span>
       <input
-        className="popup__input popup__input_value_link"
-        id="input-link"
+        className={`popup__input ${isLinkError && 'popup__input_type_error'}`}
         type="url"
         name="link"
         autoComplete="off"
         placeholder="Ссылка на картинку"
         required
-        value={link}
-        onChange={handleChangeLink}
+        value={values.link}
+        onChange={handleChange}
       />
-      <span className="popup__input-error input-link-error"></span>
+      <span
+        className={`popup__input-error ${
+          isLinkError && 'popup__input-error_active'
+        }`}
+      >
+        {isLinkError && errors.link}
+      </span>
     </PopupWithForm>
   );
 }
