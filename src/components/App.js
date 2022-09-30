@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Header from './Header.js';
 import Main from './Main.js';
 import Footer from './Footer.js';
-import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from './ImagePopup.js';
 import api from '../utils/Api';
 import { CurrentUserContext } from '../context/CurrentUserContext.js';
