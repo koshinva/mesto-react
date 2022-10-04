@@ -1,12 +1,18 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { CurrentIsLoading } from '../context/CurrentIsLoading';
 
 function PopupWithForm(props) {
   const isLoading = useContext(CurrentIsLoading);
-  // const handleClose = () => {
-  //   props.onClose();
-  //   props.resetFormOnClose();
-  // } 
+  useEffect(() => {
+    const closePopupEsc = (e) => {
+      if (e.key === 'Escape') {
+        props.handleClose();
+      }
+    };
+    window.addEventListener('keydown', closePopupEsc);
+    return () => window.removeEventListener('keydown', closePopupEsc);
+  }, []);
+
   return (
     <div
       className={`popup popup_type_${props.name} ${

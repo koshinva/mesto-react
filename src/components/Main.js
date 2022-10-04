@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { CurrentUserContext } from '../context/CurrentUserContext';
-import api from '../utils/Api';
 import Card from './Card.js';
 
 function Main({

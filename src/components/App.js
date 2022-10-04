@@ -3,7 +3,7 @@ import Header from './Header.js';
 import Main from './Main.js';
 import Footer from './Footer.js';
 import ImagePopup from './ImagePopup.js';
-import api from '../utils/Api';
+import api from '../utils/api';
 import { CurrentUserContext } from '../context/CurrentUserContext.js';
 import EditProfilePopup from './EditProfilePopup.js';
 import EditAvatarPopup from './EditAvatarPopup.js';
@@ -24,24 +24,32 @@ function App() {
   const [cardOnDelete, setCardOnDelete] = useState({});
 
   useEffect(() => {
-    api.getCardInfo().then((dataCardInfo) => {
-      setCards([...dataCardInfo]);
-    });
-  }, []);
-
-  useEffect(() => {
-    api.getUserInfo().then((dataUser) => {
-      setCurrentUser(dataUser);
-    });
+    api
+      .getCardInfo()
+      .then((dataCardInfo) => {
+        setCards([...dataCardInfo]);
+      })
+      .catch((err) => console.log(err));
+    api
+      .getUserInfo()
+      .then((dataUser) => {
+        setCurrentUser(dataUser);
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   const handleCardLike = (card) => {
     const isLiked = card.likes.some(
       (userLiked) => userLiked._id === currentUser._id
     );
-    api.changeLikeCard(card._id, !isLiked).then((newCard) => {
-      setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
-    });
+    api
+      .changeLikeCard(card._id, !isLiked)
+      .then((newCard) => {
+        setCards((state) =>
+          state.map((c) => (c._id === card._id ? newCard : c))
+        );
+      })
+      .catch((err) => console.log(err));
   };
   const handleConfirmDeleteClick = (card) => {
     setIsConfirmCardRemovePopupOpen(true);
@@ -100,15 +108,10 @@ function App() {
       setCards((state) => state.filter((c) => c._id !== cardOnDelete._id));
     });
   });
-  const closePopupEsc = (e) => {
-    if (e.key === 'Escape') {
-      closeAllPopups();
-    }
-  };
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <CurrentIsLoading.Provider value={isLoading}>
-        <div className="page" tabIndex="0" onKeyDown={closePopupEsc}>
+        <div className="page">
           <div className="container">
             <Header />
             <Main

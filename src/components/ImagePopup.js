@@ -1,5 +1,16 @@
+import { useEffect } from "react";
+
 function ImagePopup(props) {
   const isEmpty = Object.keys(props.card).length == 0;
+  useEffect(() => {
+    const closePopupEsc = (e) => {
+      if (e.key === 'Escape') {
+        props.handleClose();
+      }
+    };
+    window.addEventListener('keydown', closePopupEsc);
+    return () => window.removeEventListener('keydown', closePopupEsc);
+  }, []);
   return (
     !isEmpty && (
       <div

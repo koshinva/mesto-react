@@ -1,18 +1,13 @@
 import React, { useEffect, useRef } from 'react';
-import { useFormWithValidation } from '../utils/formValidator';
+import { useFormWithValidation } from '../hooks/formValidator';
 import PopupWithForm from './PopupWithForm';
 
 function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
   const avatar = useRef();
-  const {
-    values,
-    errors,
-    isValid,
-    handleChange,
-    resetForm,
-  } = useFormWithValidation();
+  const { values, errors, isValid, handleChange, resetForm } =
+    useFormWithValidation();
   const resetFormOnClose = () => {
-    resetForm()
+    resetForm();
     avatar.current.value = '';
   };
   const handleSubmit = (e) => {
@@ -23,7 +18,7 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
   const handleClose = () => {
     onClose();
     resetFormOnClose();
-  } 
+  };
   const isAvatarError = 'avatar' in errors && errors.avatar.length > 0;
   return (
     <PopupWithForm
@@ -42,6 +37,7 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
         type="url"
         name="avatar"
         autoComplete="off"
+        placeholder="Ссылка на аватар профиля"
         required
         ref={avatar}
         onChange={handleChange}
