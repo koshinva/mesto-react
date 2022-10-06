@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { CurrentUserContext } from '../context/CurrentUserContext';
 import { useFormWithValidation } from '../hooks/formValidator';
 import PopupWithForm from './PopupWithForm';
@@ -52,7 +52,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
         required
         minLength="2"
         maxLength="40"
-        value={values.name}
+        value={values.name ?? ""}
         onChange={handleChange}
       />
       <span
@@ -71,7 +71,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
         required
         minLength="2"
         maxLength="200"
-        value={values.about}
+        value={values.about ?? ""}
         onChange={handleChange}
       />
       <span

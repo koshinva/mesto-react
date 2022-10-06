@@ -1,11 +1,11 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
-function ImagePopup(props) {
-  const isEmpty = Object.keys(props.card).length == 0;
+function ImagePopup({ card, onClose }) {
+  const isEmpty = Object.keys(card).length === 0;
   useEffect(() => {
     const closePopupEsc = (e) => {
       if (e.key === 'Escape') {
-        props.handleClose();
+        onClose();
       }
     };
     window.addEventListener('keydown', closePopupEsc);
@@ -13,24 +13,21 @@ function ImagePopup(props) {
   }, []);
   return (
     !isEmpty && (
-      <div
-        className="popup popup_type_image popup_opened"
-        onClick={props.onClose}
-      >
+      <div className="popup popup_type_image popup_opened" onClick={onClose}>
         <div
           className="popup__image-container"
           onClick={(e) => e.stopPropagation()}
         >
           <img
             className="popup__image"
-            src={props.card.link}
-            alt={props.card.name}
+            src={card.link}
+            alt={card.name}
           />
-          <p className="popup__image-description">{props.card.name}</p>
+          <p className="popup__image-description">{card.name}</p>
           <button
             className="popup__close-icon"
             type="button"
-            onClick={props.onClose}
+            onClick={onClose}
             aria-label="Закрыть окно просмотра изображения"
           ></button>
         </div>

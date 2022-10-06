@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useFormWithValidation } from '../hooks/formValidator';
 import PopupWithForm from './PopupWithForm';
 
@@ -45,7 +45,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
         required
         minLength="2"
         maxLength="30"
-        value={values.name}
+        value={values.name ?? ""}
         onChange={handleChange}
       />
       <span
@@ -62,7 +62,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
         autoComplete="off"
         placeholder="Ссылка на картинку"
         required
-        value={values.link}
+        value={values.link ?? ""}
         onChange={handleChange}
       />
       <span
